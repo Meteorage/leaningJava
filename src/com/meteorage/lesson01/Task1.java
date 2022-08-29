@@ -1,6 +1,6 @@
-package com.meteorage.lesson02;
+package com.meteorage.lesson01;
 
-public class Main {
+public class Task1 {
     public static void main(String[] args) {
 
     }
