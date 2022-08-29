@@ -10,6 +10,6 @@ public class Task8 {
         System.out.println("year "+vatInt+ " is leap: " + checkLeapYear(vatInt));
     }
     private static boolean checkLeapYear(int vatInt) {
-        return ((vatInt % 4 == 0) && (vatInt % 100 != 0)) || ((vatInt % 4 == 0) && (vatInt % 400 == 0));
+        return ((vatInt % 4 == 0) && (vatInt % 100 != 0)) || (vatInt % 400 == 0);
     }
 }
