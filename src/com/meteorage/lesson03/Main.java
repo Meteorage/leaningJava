@@ -4,18 +4,21 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-//        int[] a = {0,0,0,0,0,0};
-//
-//        System.out.println("a = " + Arrays.toString(a));
-//        testArrayChange(a);
-//
-//        System.out.println("a = " + Arrays.toString(a));
-//
-//        testString();
+        int[] a = {0,0,0,0,0,0};
+
+        System.out.println("a = " + Arrays.toString(a));
+        testArrayChange(a);
+
+        System.out.println("a = " + Arrays.toString(a));
+
+        testString();
 
 
         testOverload(3,4);
         testOverload(3.34,4.56456);
+        testOverload();
+        testOverload(new int[]{1,2,3,4,5,6,7,8,9,10});
+        testOverload(1,2,3,4,5,6,7,8,9,10);
     }
 
 
@@ -38,10 +41,22 @@ public class Main {
 
     private static void testOverload(int a, int b) {
         int multiple =  a * b;
-        System.out.printf("Произведение %d * %d = %d(int)", a, b, multiple);
+        System.out.printf("Произведение %d * %d = %d(int)%n", a, b, multiple);
     }
     private static void testOverload(double a, double b) {
         double multiple =  a * b;
-        System.out.printf("Произведение %f * %f = %f(double)", a, b, multiple);
+        System.out.printf("Произведение %.2f * %.2f = %.2f(double)%n", a, b, multiple);
+    }
+
+    private static void testOverload() {
+        testOverload(0,0);
+    }
+
+    private static void testOverload(int... arr) {
+        int multiple =  1;
+        for (int item : arr) {
+            multiple *= item;
+        }
+        System.out.printf("Произведение: %d(int)%n", multiple);
     }
 }
