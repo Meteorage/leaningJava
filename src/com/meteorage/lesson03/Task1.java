@@ -23,57 +23,25 @@ public class Task1 {
 
     public static void main(String[] args) {
 
-        Boolean wordGuessed = false;
-        Boolean sucсess = false;
+        boolean wordGuessed = false;
+        boolean endFindWord = false;
 
         while (true){
-            if (wordGuessed == false){
-                System.out.print("Компьютер загадал одно из слов: ");
-                System.out.println(Arrays.toString(words));
-                initWord();
-                wordGuessed = true;
-            }
-
-            System.out.print("Комп загадал слово: ");
-            System.out.println(Arrays.toString(wordField[1]));
-
-            System.out.println(Arrays.toString(wordField[0]));
-            System.out.print("Введите загаданное слово: ");
-            String tempWord = scanner.next();
-            
-            for (int i = 0; i < tempWord.length(); i++) {
-                char tempChar = tempWord.charAt(i);
-                if (tempChar == wordField[1][i]){
-                    wordField[0][i] = tempChar;
-                }
-            }
-
-            sucсess = true;
-            for (int i = 0; i < wordField.length; i++) {
-                if (wordField[0][i] != wordField[1][i]){
-                    sucсess = false;
-                }
-            }
-            
-
-            if (sucсess == true){
-                System.out.println("Вы угадали слово! Хотите продолжить? y/n?");
-                String result = scanner.next();
-                switch (result){
-                    case "y":
-                    case "+":
-                    case "да":
-                    case "yes":
-                    case "д": {
-                        wordGuessed = false;
-                        sucсess = false;
-                        }
-                    default: {
-                        System.exit(0);
-                    }
-                }
-            }
+            wordGuessed = isWordGuessed(wordGuessed);
+            readAndCompareWords();
+            endFindWord = isEndFindWord();
+            checkEndGameAndRestart(wordGuessed, endFindWord);
         }
+    }
+
+    private static boolean isWordGuessed(boolean wordGuessed) {
+        if (!wordGuessed){
+            System.out.print("Компьютер загадал одно из слов: ");
+            System.out.println(Arrays.toString(words));
+            initWord();
+            wordGuessed = true;
+        }
+        return wordGuessed;
     }
 
     private static void initWord(){
@@ -89,5 +57,49 @@ public class Task1 {
                 wordField[1][i] = '#';
             }
         }
+    }
+
+    private static void readAndCompareWords() {
+        System.out.println(Arrays.toString(wordField[0]));
+        System.out.print("Введите загаданное слово: ");
+        String tempWord = scanner.next();
+
+        for (int i = 0; i < tempWord.length(); i++) {
+            char tempChar = tempWord.charAt(i);
+            if (tempChar == wordField[1][i]){
+                wordField[0][i] = tempChar;
+            }
+        }
+    }
+
+    private static void checkEndGameAndRestart(boolean wordGuessed, boolean endFindWord) {
+        if (endFindWord){
+            System.out.println("Вы угадали слово! Хотите продолжить? y/n?");
+            String result = scanner.next();
+            switch (result){
+                case "y":
+                case "+":
+                case "да":
+                case "yes":
+                case "д": {
+                    wordGuessed = false;
+                    endFindWord = false;
+                    }
+                default: {
+                    System.exit(0);
+                }
+            }
+        }
+    }
+
+    private static boolean isEndFindWord() {
+        boolean endFindWord;
+        endFindWord = true;
+        for (int i = 0; i < wordField.length; i++) {
+            if(wordField[0][i] != wordField[1][i]){
+                endFindWord = false;
+            }
+        }
+        return endFindWord;
     }
 }
