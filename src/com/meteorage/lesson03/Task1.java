@@ -26,14 +26,14 @@ public class Task1 {
 
     public static void main(String[] args) {
         while (true){
-            isWordGuessed();
+            checkWordGuessed();
             readAndCompareWords();
-            isEndFindWord();
+            checkEndFindWord();
             checkEndGameAndRestart();
         }
     }
 
-    private static void isWordGuessed() {
+    private static void checkWordGuessed() {
         if (!wordGuessed){
             System.out.print("Компьютер загадал одно из слов: ");
             System.out.println(Arrays.toString(words));
@@ -94,7 +94,7 @@ public class Task1 {
         }
     }
 
-    private static void isEndFindWord() {
+    private static void checkEndFindWord() {
         endFindWord = true;
         for (int i = 0; i < wordField.length; i++) {
             if(wordField[0][i] != wordField[1][i]){
