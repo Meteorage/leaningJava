@@ -20,34 +20,32 @@ public class Task1 {
     static String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
     static char[][] wordField = new char[2][15];
     static Scanner scanner = new Scanner(System.in);
+    static Random random = new Random();
+    static boolean wordGuessed = false;
+    static boolean endFindWord = false;
 
     public static void main(String[] args) {
-
-        boolean wordGuessed = false;
-        boolean endFindWord = false;
-
         while (true){
-            wordGuessed = isWordGuessed(wordGuessed);
+            isWordGuessed();
             readAndCompareWords();
-            endFindWord = isEndFindWord();
-            checkEndGameAndRestart(wordGuessed, endFindWord);
+            isEndFindWord();
+            checkEndGameAndRestart();
         }
     }
 
-    private static boolean isWordGuessed(boolean wordGuessed) {
+    private static void isWordGuessed() {
         if (!wordGuessed){
             System.out.print("Компьютер загадал одно из слов: ");
             System.out.println(Arrays.toString(words));
             initWord();
             wordGuessed = true;
         }
-        return wordGuessed;
     }
 
     private static void initWord(){
 
-        Random random = new Random();
-        String selectWords = words[random.nextInt(words.length)];
+        int indexWord = random.nextInt(words.length);
+        String selectWords = words[indexWord];
 
         for (int i = 0; i < wordField[0].length; i++) {
             wordField[0][i] = '#';
@@ -60,7 +58,10 @@ public class Task1 {
     }
 
     private static void readAndCompareWords() {
-        System.out.println(Arrays.toString(wordField[0]));
+        for (int i = 0; i < wordField[0].length; i++) {
+            System.out.print(wordField[0][i]);
+        }
+        System.out.println();
         System.out.print("Введите загаданное слово: ");
         String tempWord = scanner.next();
 
@@ -72,7 +73,7 @@ public class Task1 {
         }
     }
 
-    private static void checkEndGameAndRestart(boolean wordGuessed, boolean endFindWord) {
+    private static void checkEndGameAndRestart() {
         if (endFindWord){
             System.out.println("Вы угадали слово! Хотите продолжить? y/n?");
             String result = scanner.next();
@@ -84,6 +85,7 @@ public class Task1 {
                 case "д": {
                     wordGuessed = false;
                     endFindWord = false;
+                    break;
                     }
                 default: {
                     System.exit(0);
@@ -92,14 +94,13 @@ public class Task1 {
         }
     }
 
-    private static boolean isEndFindWord() {
-        boolean endFindWord;
+    private static void isEndFindWord() {
         endFindWord = true;
         for (int i = 0; i < wordField.length; i++) {
             if(wordField[0][i] != wordField[1][i]){
                 endFindWord = false;
+                break;
             }
         }
-        return endFindWord;
     }
 }
