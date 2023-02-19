@@ -30,7 +30,7 @@ public class Task1 {
 
     private static void startGame() {
 
-        boolean isEndGame = false;
+        boolean isEndGame;
 
         prepareField();
         showMap();
@@ -149,8 +149,8 @@ public class Task1 {
     }
 
     private static boolean checkSquareToWin(int x, int y, char dotType) {
-        int countDotX = 0;
-        int countDotY = 0;
+        int countDotX;
+        int countDotY;
         int countDotXY = 0;
         int countDotYX = 0;
         for (int i = x; i < x+COUNT_TO_WIN; i++) {
