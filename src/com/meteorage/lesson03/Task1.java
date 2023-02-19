@@ -96,7 +96,7 @@ public class Task1 {
 
     private static void checkEndFindWord() {
         endFindWord = true;
-        for (int i = 0; i < wordField.length; i++) {
+        for (int i = 0; i < wordField[0].length; i++) {
             if(wordField[0][i] != wordField[1][i]){
                 endFindWord = false;
                 break;
