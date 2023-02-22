@@ -3,15 +3,9 @@ package com.meteorage.lesson04;
 import java.util.Random;
 import java.util.Scanner;
 
-/*
-1. Полностью разобраться с кодом, попробовать переписать с нуля, стараясь не подглядывать в методичку;
-2. Переделать проверку победы, чтобы она не была реализована просто набором условий, например, с использованием циклов.
-3. * Попробовать переписать логику проверки победы, чтобы она работала для поля 5х5 и количества фишек 4. Очень желательно не делать это просто набором условий для каждой из возможных ситуаций;
-4. *** Доработать искусственный интеллект, чтобы он мог блокировать ходы игрока.
-*/
-
 public class Task1 {
 
+    static Point point = new Point();
     static final byte SIZE_FIELD = 4;
     static final byte COUNT_TO_WIN = 3;
     static char[][] map = new char[SIZE_FIELD][SIZE_FIELD];
@@ -38,21 +32,21 @@ public class Task1 {
         do {
 
 
-        turnHuman();
-        showMap();
-        isEndGame = checkWin(DOT_HUMAN);
-        if (isEndGame){
-            System.out.println("Вы победили!!!");
-            break;
-        }
+            turnHuman();
+            showMap();
+            isEndGame = checkWin(DOT_HUMAN);
+            if (isEndGame) {
+                System.out.println("Вы победили!!!");
+                break;
+            }
 
-        turnAI();
-        showMap();
-        isEndGame = checkWin(DOT_AI);
-        if (isEndGame){
-            System.out.println("Компьютер выиграл!");
-        }
-        }while (!isEndGame);
+            turnAI();
+            showMap();
+            isEndGame = checkWin(DOT_AI);
+            if (isEndGame) {
+                System.out.println("Компьютер выиграл!");
+            }
+        } while (!isEndGame);
 
     }
 
@@ -128,18 +122,33 @@ public class Task1 {
             row = random.nextInt(SIZE_FIELD);
             col = random.nextInt(SIZE_FIELD);
 
-            checkBlockCell(row,col);
+            if (checkBlockCell(row, col, DOT_HUMAN)){
+                if (point.X != -1 || point.Y != -1) {
+                    row = point.X;
+                    col = point.Y;
+                }
+            }else{
+                if (checkBlockCell(row, col, DOT_AI)){
+                    if (point.X != -1 || point.Y != -1) {
+                        row = point.X;
+                        col = point.Y;
+                    }
+                }
+            }
 
         } while (!cellIsFree(row, col, false));
         map[row][col] = DOT_AI;
+
+        point.X = -1;
+        point.Y = -1;
     }
 
     private static boolean checkWin(char dotType) {
         boolean res = false;
-        for (int i = 0; i < (SIZE_FIELD-COUNT_TO_WIN+1); i++) {
-            for (int j = 0; j < SIZE_FIELD-COUNT_TO_WIN+1; j++) {
-                res = checkSquareToWin(i,j,dotType);
-                if (res){
+        for (int i = 0; i < (SIZE_FIELD - COUNT_TO_WIN + 1); i++) {
+            for (int j = 0; j < SIZE_FIELD - COUNT_TO_WIN + 1; j++) {
+                res = checkSquareToWin(i, j, dotType);
+                if (res) {
                     return res;
                 }
             }
@@ -153,21 +162,21 @@ public class Task1 {
         int countDotY;
         int countDotXY = 0;
         int countDotYX = 0;
-        for (int i = x; i < x+COUNT_TO_WIN; i++) {
+        for (int i = x; i < x + COUNT_TO_WIN; i++) {
             countDotX = 0;
             countDotY = 0;
-            for (int j = y; j < y+COUNT_TO_WIN; j++) {
-                if (map[i][j] == dotType){
+            for (int j = y; j < y + COUNT_TO_WIN; j++) {
+                if (map[i][j] == dotType) {
                     countDotX++;
                 }
-                if (map[j][i] == dotType){
+                if (map[j][i] == dotType) {
                     countDotY++;
                 }
             }
-            if (map[i][i] == dotType){
+            if (map[i][i] == dotType) {
                 countDotXY++;
             }
-            if (map[i][x+COUNT_TO_WIN - i] == dotType){
+            if (map[i][x + COUNT_TO_WIN - i] == dotType) {
                 countDotYX++;
             }
             if (countDotX == COUNT_TO_WIN || countDotY == COUNT_TO_WIN || countDotXY == COUNT_TO_WIN || countDotYX == COUNT_TO_WIN) {
@@ -177,16 +186,66 @@ public class Task1 {
         return false;
     }
 
-    private static void checkBlockCell(int row, int col) {
-//        boolean res = false;
-//        for (int i = 0; i < (SIZE_FIELD-COUNT_TO_WIN+1); i++) {
-//            for (int j = 0; j < SIZE_FIELD-COUNT_TO_WIN+1; j++) {
-//                res = checkSquareToWin(i,j,DOT_HUMAN);
-//                if (res){
-//                    return res;
-//                }
-//            }
-//        }
-//        return res;
+    private static boolean checkBlockCell(int row, int col, char dot) {
+        boolean res = false;
+        for (int i = 0; i < (SIZE_FIELD - COUNT_TO_WIN + 1); i++) {
+            for (int j = 0; j < SIZE_FIELD - COUNT_TO_WIN + 1; j++) {
+                res = checkSquareToPrepareWin(i, j, dot);
+                if (res) {
+                    return res;
+                }
+            }
+        }
+        return res;
+    }
+
+    private static boolean checkSquareToPrepareWin(int x, int y, char dotType) {
+        int bufferX = -1, bufferY = -1;
+        int countDot;
+
+        //TODO отрефакторить
+        for (int i = x; i < x + COUNT_TO_WIN; i++) {
+            countDot = 0;
+            for (int j = y; j < y + COUNT_TO_WIN; j++) {
+                if (map[i][j] == dotType) {
+                    countDot++;
+                } else {
+                    if (map[i][j] == DOT_EMPTY) {
+                        bufferX = i;
+                        bufferY = j;
+                    }else {
+                        countDot--;
+                    }
+                }
+            }
+            if (countDot == COUNT_TO_WIN - 1) {
+                point.X = bufferX;
+                point.Y = bufferY;
+                return true;
+            }
+        }
+        for (int j = x; j < x + COUNT_TO_WIN; j++) {
+            countDot = 0;
+            for (int i = y; i < y + COUNT_TO_WIN; i++) {
+                if (map[i][j] == dotType) {
+                    countDot++;
+                } else {
+                    if (map[i][j] == DOT_EMPTY) {
+                        bufferX = i;
+                        bufferY = j;
+                    }else {
+                        countDot--;
+                    }
+                }
+            }
+            if (countDot == COUNT_TO_WIN - 1) {
+                point.X = bufferX;
+                point.Y = bufferY;
+                return true;
+            }
+        }
+        point.X = -1;
+        point.Y = -1;
+        return false;
     }
 }
