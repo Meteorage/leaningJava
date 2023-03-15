@@ -8,7 +8,7 @@ public class Person {
     private int salary;
     private int age;
 
-    static public int countPersOver45;
+    static public int countPersOver40;
 
     public Person(String fio, String position, String email, String telephone, int salary, int age) {
         this.fio = fio;
@@ -19,7 +19,7 @@ public class Person {
         this.age = age;
 
         if (age > 40){
-            countPersOver45++;
+            countPersOver40++;
         }
     }
 
